@@ -8,8 +8,6 @@ class Keyboard {
     }
 
     onKeyDown(event) {
-        console.log(event);
-        console.log(event.which);
     }
 
     onKeyUp(event) {

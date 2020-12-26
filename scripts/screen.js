@@ -1,4 +1,4 @@
-class Renderer {
+class Screen {
     constructor(scale) {
         this.scale = scale;
 
@@ -41,4 +41,4 @@ class Renderer {
     }
 }
 
-export default Renderer;
+export default Screen;

@@ -1,10 +1,10 @@
-import Renderer from './renderer.js';
+import Screen from './screen.js';
 import Keyboard from './keyboard.js';
 import Cpu from './cpu.js';
 
-const renderer = new Renderer(10);
+const screen = new Screen(10);
 const keyboard = new Keyboard();
-const cpu = new Cpu(renderer, keyboard);
+const cpu = new Cpu(screen, keyboard);
 
 let tic;
 
@@ -22,7 +22,7 @@ function step() {
     if (elapsed >= (1000 / 60)) {
         tic = toc;
         cpu.cycle();
-        renderer.render();
+        screen.render();
     }
     window.requestAnimationFrame(step);
 }
@@ -37,7 +37,7 @@ function loadRom(romName) {
             cpu.loadProgram(program);
             console.log('Loaded');
         }
-    }
+    };
 
     request.open('GET', 'roms/' + romName);
     request.responseType = 'arraybuffer';
