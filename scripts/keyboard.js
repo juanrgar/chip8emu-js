@@ -5,6 +5,7 @@ class Keyboard {
     }
 
     isKeyPressed(keyCode) {
+        return false;
     }
 
     onKeyDown(event) {

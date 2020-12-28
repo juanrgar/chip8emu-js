@@ -10,7 +10,7 @@ let tic;
 
 function init() {
     loadSprites();
-    loadRom('BLINKY');
+    loadRom('Minimal game [Revival Studios, 2007].ch8');
     cpu.reset();
     tic = Date.now();
     window.requestAnimationFrame(step);
@@ -33,9 +33,9 @@ function loadRom(romName) {
 
     request.onload = function() {
         if (request.response) {
-            let program = new Array(request.response);
+            let program = new Uint8Array(request.response);
             cpu.loadProgram(program);
-            console.log('Loaded');
+            console.log('loaded');
         }
     };
 
