@@ -12,9 +12,10 @@ class Cpu {
         this.sp = 0;
         this.stack = new Array(16);
 
+        this.halted = false;
         this.pc_updated = false;
 
-        this.decode_level1 = [
+        this.decoder_level1 = [
             this.decode_level1_0,
             this.inst_JP,
             this.inst_CALL,
@@ -33,7 +34,7 @@ class Cpu {
             this.decode_level1_F
         ];
 
-        this.decode_level2_8 = [
+        this.decoder_level2_8 = [
             this.inst_LD_reg,
             this.inst_OR,
             this.inst_AND,
@@ -52,12 +53,12 @@ class Cpu {
             null
         ];
 
-        this.decode_level2_E = [
+        this.decoder_level2_E = [
             this.inst_SKP,
             this.inst_SKNP
         ];
 
-        this.decode_level2_F = [
+        this.decoder_level2_F = [
             this.decode_level3_F_0,
             this.decode_level3_F_1,
             this.inst_LD_F,
@@ -67,12 +68,12 @@ class Cpu {
             this.inst_LD_regs_ld
         ];
 
-        this.decode_level3_F_0 = [
+        this.decoder_level3_F_0 = [
             this.inst_LD_DT_rd,
             this.inst_LD_K
         ];
 
-        this.decode_level3_F_1 = [
+        this.decoder_level3_F_1 = [
             null,
             this.inst_LD_DT_wr,
             this.inst_LD_ST,
@@ -115,19 +116,24 @@ class Cpu {
     }
 
     cycle() {
-        let inst = (this.memory[this.pc] << 8) | this.memory[this.pc + 1];
-        console.log('fetch: ' + this.pc.toString(16) + ': ' + inst.toString(16));
-        this.pc_updated = false;
-        this.decode_level0(inst);
-        if (!this.pc_updated) {
-            this.inc_pc(1);
+        if (this.halted) {
+            return;
+        }
+        for (let i = 0; i < 10; i++) {
+            let inst = (this.memory[this.pc] << 8) | this.memory[this.pc + 1];
+            console.log('fetch: ' + this.pc.toString(16) + ': ' + inst.toString(16));
+            this.pc_updated = false;
+            this.decode_level0(inst);
+            if (!this.pc_updated) {
+                this.inc_pc(1);
+            }
         }
         this.updateTimers();
     }
 
     decode_level0(inst) {
         let opcode = (inst >> 12) & 0xF;
-        let func = this.decode_level1[opcode];
+        let func = this.decoder_level1[opcode];
         func.call(this, inst);
     }
 
@@ -144,37 +150,37 @@ class Cpu {
 
     decode_level1_8(inst) {
         let opcode = inst & 0xF;
-        let func = this.decode_level2_8[opcode];
+        let func = this.decoder_level2_8[opcode];
         func.call(this, inst);
     }
 
     decode_level1_E(inst) {
         let opcode = inst & 1;
-        let func = this.decode_level2_E[opcode];
+        let func = this.decoder_level2_E[opcode];
         func.call(this, inst);
     }
 
     decode_level1_F(inst) {
         let opcode = (inst >> 4) & 0xF;
-        let func = this.decode_level2_F[opcode];
+        let func = this.decoder_level2_F[opcode];
         func.call(this, inst);
     }
 
     decode_level3_F_0(inst) {
         let opcode = (inst >> 3) & 1;
-        let func = this.decode_level3_F_0[opcode];
+        let func = this.decoder_level3_F_0[opcode];
         func.call(this, inst);
     }
 
     decode_level3_F_1(inst) {
         let opcode = (inst >> 2) & 3;
-        let func = this.decode_level3_F_1[opcode];
+        let func = this.decoder_level3_F_1[opcode];
         func.call(this, inst);
     }
 
     inst_SYS(inst) {
-        // let nnn = inst & 0xFFF;
-        // this.set_pc(nnn);
+        let nnn = inst & 0xFFF;
+        this.set_pc(nnn);
     }
 
     inst_CLS(inst) {
@@ -198,7 +204,7 @@ class Cpu {
 
     inst_CALL(inst) {
         let nnn = inst & 0xFFF;
-        this.stack[this.sp] = this.pc;
+        this.stack[this.sp] = this.pc + 2;
         this.inc_sp();
         this.set_pc(nnn);
     }
@@ -206,28 +212,28 @@ class Cpu {
     inst_SE_imm(inst) {
         let x = (inst >> 8) & 0xF;
         let kk = inst & 0xFF;
-        let inc = 1 + (this.v[x] == kk);
+        let inc = 1 + (this.v[x] === kk);
         this.inc_pc(inc);
     }
 
     inst_SNE_imm(inst) {
         let x = (inst >> 8) & 0xF;
         let kk = inst & 0xFF;
-        let inc = 1 + (this.v[x] != kk);
+        let inc = 1 + (this.v[x] !== kk);
         this.inc_pc(inc);
     }
 
     inst_SE_reg(inst) {
         let x = (inst >> 8) & 0xF;
         let y = (inst >> 4) & 0xF;
-        let inc = 1 + (this.v[x] == this.v[y]);
+        let inc = 1 + (this.v[x] === this.v[y]);
         this.inc_pc(inc);
     }
 
     inst_SNE_reg(inst) {
         let x = (inst >> 8) & 0xF;
         let y = (inst >> 4) & 0xF;
-        let inc = 1 + (this.v[x] != this.v[y]);
+        let inc = 1 + (this.v[x] !== this.v[y]);
         this.inc_pc(inc);
     }
 
@@ -258,7 +264,7 @@ class Cpu {
         this.delayTimer = this.v[x];
     }
 
-    inst_LD_ST_wr(inst) {
+    inst_LD_ST(inst) {
         let x = (inst >> 8) & 0xF;
         this.soundTimer = this.v[x];
     }
@@ -353,7 +359,7 @@ class Cpu {
 //        this.v[0xF] = this.v[x] & 0x01;
 //        this.v[x] >>= 1;
         let vy = this.v[y];
-        this.v[0xF] = vy & 0x01;
+        this.v[0xF] = vy & 1;
         this.v[x] = vy >> 1;
     }
 
@@ -363,7 +369,8 @@ class Cpu {
 //        this.v[0xF] = this.v[x] & 0x80;
 //        this.v[x] <<= 1;
 //        this.v[x] &= 0xFF;
-        this.v[0xF] = vy & 0x80;
+        let vy = this.v[y];
+        this.v[0xF] = (vy >> 7) & 1;
         this.v[x] = this.v[y] << 1;
     }
 
@@ -404,7 +411,12 @@ class Cpu {
     }
 
     inst_LD_K(inst) {
-        console.log('not implemented');
+        let x = (inst >> 8) & 0xF;
+        this.halted = true;
+        this.keyboard.onNextKeyPress = function (key) {
+            this.v[x] = key;
+            this.halted = false;
+        }.bind(this);
     }
 
     updateTimers() {

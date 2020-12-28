@@ -10,10 +10,16 @@ let tic;
 
 function init() {
     loadSprites();
-    loadRom('Minimal game [Revival Studios, 2007].ch8');
-    cpu.reset();
-    tic = Date.now();
-    window.requestAnimationFrame(step);
+    // let rom = 'Minimal game [Revival Studios, 2007].ch8';
+    // let rom = '15 Puzzle [Roger Ivie].ch8';
+    // let rom = 'Maze [David Winter, 199x].ch8';
+    let rom = 'Cave.ch8';
+    // let rom = 'Zero Demo [zeroZshadow, 2007].ch8';
+    loadRom(rom, function () {
+        cpu.reset();
+        tic = Date.now();
+        window.requestAnimationFrame(step);
+    });
 }
 
 function step() {
@@ -27,7 +33,7 @@ function step() {
     window.requestAnimationFrame(step);
 }
 
-function loadRom(romName) {
+function loadRom(romName, cb) {
     let request = new XMLHttpRequest;
     let self = this;
 
@@ -35,7 +41,7 @@ function loadRom(romName) {
         if (request.response) {
             let program = new Uint8Array(request.response);
             cpu.loadProgram(program);
-            console.log('loaded');
+            cb();
         }
     };
 
