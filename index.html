@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="scripts/chip8.js"></script>
+  </head>
 
-<head>
-  <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-    <select></select>
-  <canvas></canvas>
-
-  <script type="module" src="scripts/chip8.js"></script>
-</body>
-
+  <body>
+    <div id="header">
+      <h1>CHIP-8 Computer</h1>
+    </div>
+    <div id="content">
+      <select id="rom-selector">
+        <option value="">Load ROM...</option>
+      </select>
+      <canvas id="screen"></canvas>
+    </div>
+    <div id="footer">
+    </div>
+  </body>
 </html>
