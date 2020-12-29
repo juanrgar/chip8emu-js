@@ -13,8 +13,9 @@ function init() {
     // let rom = 'Minimal game [Revival Studios, 2007].ch8';
     // let rom = '15 Puzzle [Roger Ivie].ch8';
     // let rom = 'Maze [David Winter, 199x].ch8';
-    let rom = 'Cave.ch8';
+    // let rom = 'Cave.ch8';
     // let rom = 'Zero Demo [zeroZshadow, 2007].ch8';
+    let rom = 'Pong (1 player).ch8';
     loadRom(rom, function () {
         cpu.reset();
         tic = Date.now();
