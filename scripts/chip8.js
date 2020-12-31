@@ -6,21 +6,15 @@ const screen = new Screen(10);
 const keyboard = new Keyboard();
 const cpu = new Cpu(screen, keyboard);
 
-let tic;
+let tic, roms;
+
+$(function() {
+    init();
+});
 
 function init() {
     loadSprites();
-    // let rom = 'Minimal game [Revival Studios, 2007].ch8';
-    // let rom = '15 Puzzle [Roger Ivie].ch8';
-    // let rom = 'Maze [David Winter, 199x].ch8';
-    // let rom = 'Cave.ch8';
-    // let rom = 'Zero Demo [zeroZshadow, 2007].ch8';
-    let rom = 'Pong (1 player).ch8';
-    loadRom(rom, function () {
-        cpu.reset();
-        tic = Date.now();
-        window.requestAnimationFrame(step);
-    });
+    setupRomSelector();
 }
 
 function step() {
@@ -76,4 +70,27 @@ function loadSprites() {
     }
 }
 
-init();
+function setupRomSelector() {
+    $.get('roms/roms.json', function(romsList) {
+        roms = romsList;
+        let romSelector = document.querySelector('#rom-selector');
+        $.each(romsList, function(i, rom) {
+            let o = new Option(rom.title, rom.file);
+            o.title = rom.description;
+            
+            romSelector[romSelector.length] = o;
+        });
+        $('#rom-selector').change(onRomSelected);
+    });
+}
+
+function onRomSelected() {
+    let romSelector = document.querySelector('#rom-selector');
+    let romName = roms[romSelector.selectedIndex - 1].file;
+    loadRom(romName, function () {
+        screen.clear();
+        cpu.reset();
+        tic = Date.now();
+        window.requestAnimationFrame(step);
+    });
+}

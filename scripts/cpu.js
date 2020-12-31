@@ -121,7 +121,6 @@ class Cpu {
         }
         for (let i = 0; i < 10; i++) {
             let inst = (this.memory[this.pc] << 8) | this.memory[this.pc + 1];
-            console.log('fetch: ' + this.pc.toString(16) + ': ' + inst.toString(16));
             this.pc_updated = false;
             this.decode_level0(inst);
             if (!this.pc_updated) {
