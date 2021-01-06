@@ -4,17 +4,35 @@
     <link rel="stylesheet" href="style.css">
     <script type="module" src="scripts/chip8.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+
+    <title>CHIP-8 Emulator</title>
   </head>
 
   <body>
     <div id="header">
-      <h1>CHIP-8 Computer</h1>
+      <h1>CHIP-8 Emulator</h1>
     </div>
     <div id="content">
       <select id="rom-selector">
         <option value="">Load ROM...</option>
       </select>
+      <button id="stop-button">Stop</button>
       <canvas id="screen"></canvas>
+        <h2 id="settings">Settings</h2>
+        <div id="settings-pane">
+          <div id="quirks">
+            <h3>Quirks</h3>
+            <div>
+            <input type="checkbox" id="load-store-quirk">
+            <label for="load-store-quirk">LD [I], Vx and LD Vx, [I] don't increment value of I register.</label>
+            </div>
+            <div>
+            <input type="checkbox" id="shift-quirk">
+            <label for="shift-quirk">Shift instructions operate on VX.</label>
+          </div>
+          </div>
+      </div>
     </div>
     <div id="footer">
     </div>

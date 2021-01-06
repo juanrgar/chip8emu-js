@@ -9,13 +9,25 @@ const cpu = new Cpu(screen, keyboard);
 let tic, roms;
 
 $(function() {
-    init();
-});
-
-function init() {
     loadSprites();
     setupRomSelector();
-}
+    let stopButton = $("#stop-button");
+    stopButton.prop("disabled", true).click(function () {
+        if (stopButton.text() === "Stop") {
+            cpu.halt();
+            stopButton.text("Resume");
+        } else if (stopButton.text() === "Resume") {
+            cpu.resume();
+            stopButton.text("Stop");
+        }
+        stopButton.blur();
+    });
+    $("#settings").click(function() {
+        $("#settings-pane").toggle();
+    });
+    $("#load-store-quirk").prop("checked", false);
+    $("#shift-quirk").prop("checked", false);
+});
 
 function step() {
     let toc = Date.now();
@@ -77,7 +89,7 @@ function setupRomSelector() {
         $.each(romsList, function(i, rom) {
             let o = new Option(rom.title, rom.file);
             o.title = rom.description;
-            
+
             romSelector[romSelector.length] = o;
         });
         $('#rom-selector').change(onRomSelected);
@@ -86,10 +98,19 @@ function setupRomSelector() {
 
 function onRomSelected() {
     let romSelector = document.querySelector('#rom-selector');
+    if (romSelector.selectedIndex == 0) {
+        $("#stop-button").text("Stop").prop("disabled", true).blur();
+        screen.clear();
+        cpu.reset();
+        return;
+    }
     let romName = roms[romSelector.selectedIndex - 1].file;
     loadRom(romName, function () {
         screen.clear();
         cpu.reset();
+        cpu.resume();
+        romSelector.blur();
+        $("#stop-button").prop("disabled", false);
         tic = Date.now();
         window.requestAnimationFrame(step);
     });

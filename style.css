@@ -1,17 +1,13 @@
 body {
+    background-color: #151515;
+    color: #b5e853;
+    font-family: monospace;
     margin: 0;
 }
 
 #header {
-    background-color: black;
-    color: white;
-    margin: 0;
-    border-bottom: 3px solid blue;
-}
-
-#header h1 {
-    margin: 0;
-    font-family: monospace;
+    color: #b5e853;
+    text-align: center;
 }
 
 #content {
@@ -21,8 +17,10 @@ body {
 
 #rom-selector {
     margin: 10px auto;
+    font-family: monospace;
 }
 
 #screen {
-    border: 2px solid black;
+    background-color: white;
+    border: 10px solid #b5e853;
 }

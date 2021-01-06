@@ -13,6 +13,7 @@ class Cpu {
         this.stack = new Array(16);
 
         this.halted = false;
+        this.wait_for_irq = false;
         this.pc_updated = false;
 
         this.decoder_level1 = [
@@ -94,6 +95,7 @@ class Cpu {
     reset() {
         this.set_pc(0x200);
         this.pc_updated = false;
+        this.halt();
     }
 
     inc_pc(ninst) {
@@ -116,7 +118,7 @@ class Cpu {
     }
 
     cycle() {
-        if (this.halted) {
+        if (this.halted || this.wait_for_irq) {
             return;
         }
         for (let i = 0; i < 10; i++) {
@@ -128,6 +130,14 @@ class Cpu {
             }
         }
         this.updateTimers();
+    }
+
+    halt() {
+        this.halted = true;
+    }
+
+    resume() {
+        this.halted = false;
     }
 
     decode_level0(inst) {
@@ -411,10 +421,13 @@ class Cpu {
 
     inst_LD_K(inst) {
         let x = (inst >> 8) & 0xF;
-        this.halted = true;
+        this.wait_for_irq = true;
         this.keyboard.onNextKeyPress = function (key) {
+            if (this.halted) {
+                return;
+            }
             this.v[x] = key;
-            this.halted = false;
+            this.wait_for_irq = false;
         }.bind(this);
     }
 
