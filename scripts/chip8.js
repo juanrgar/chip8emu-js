@@ -46,6 +46,7 @@ $(function() {
     });
     $("#load-store-quirk").prop("checked", false);
     $("#shift-quirk").prop("checked", false);
+    $("#rom-info p").html("No ROM loaded.");
 });
 
 function step() {
@@ -121,15 +122,17 @@ function onRomSelected() {
         $("#stop-button").text("Stop").prop("disabled", true).blur();
         screen.clear();
         cpu.reset();
+        $("#rom-info p").html("No ROM loaded.");
         return;
     }
-    let romName = roms[romSelector.selectedIndex - 1].file;
-    loadRom(romName, function () {
+    let rom = roms[romSelector.selectedIndex - 1];
+    loadRom(rom.file, function () {
         screen.clear();
         cpu.reset();
         cpu.resume();
         romSelector.blur();
         $("#stop-button").prop("disabled", false);
+        $("#rom-info p").html(rom.description);
         tic = Date.now();
         window.requestAnimationFrame(step);
     });

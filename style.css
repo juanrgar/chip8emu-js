@@ -12,7 +12,7 @@ body {
 
 #content {
     max-width: 640px;
-    margin: 0 auto;
+    margin: 10px auto;
 }
 
 #rom-selector {
@@ -22,5 +22,11 @@ body {
 
 #screen {
     background-color: white;
-    border: 10px solid #b5e853;
+    border: 5px solid #b5e853;
+}
+
+footer {
+    text-align: center;
+    margin: 30px auto;
+    color: #666;
 }

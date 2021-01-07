@@ -14,12 +14,7 @@
       <h1>CHIP-8 Emulator</h1>
     </div>
     <div id="content">
-      <select id="rom-selector">
-        <option value="">Load ROM...</option>
-      </select>
-      <button id="stop-button">Stop</button>
-      <canvas id="screen"></canvas>
-      <div id="keyboard" class="floated">
+      <div id="keyboard">
         <h2>Keyboard Mapping</h2>
         ---------  ..   ---------<br>
         |1|2|3|C|  ..   |1|2|3|4|<br>
@@ -30,6 +25,17 @@
         ---------  ..   ---------<br>
         |A|0|B|F|  ..   |Z|X|C|V|<br>
         ---------  ..   ---------<br>
+      </div>
+      <div id="rom-info">
+        <h2>ROM Info</h2>
+        <p></p>
+      </div>
+      <div id="console">
+        <select id="rom-selector">
+          <option value="">Load ROM...</option>
+        </select>
+        <button id="stop-button">Stop</button>
+        <canvas id="screen"></canvas>
       </div>
       <h2 id="settings">Settings</h2>
       <div id="settings-pane">
@@ -46,7 +52,8 @@
         </div>
       </div>
     </div>
-    <div id="footer">
-    </div>
+    <footer>
+      Copyright (C) 2020 Juan R. García Blanco <juanrgar@gmail.com>
+    </footer>
   </body>
 </html>
