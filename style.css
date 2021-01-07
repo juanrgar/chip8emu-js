@@ -1,6 +1,6 @@
 body {
     background-color: #151515;
-    color: #b5e853;
+    color: #eaeaea;
     font-family: monospace;
     margin: 0;
 }
@@ -13,6 +13,10 @@ body {
 #content {
     max-width: 640px;
     margin: 10px auto;
+}
+
+#content h2,h3{
+    color: #b5e853;
 }
 
 #rom-selector {
