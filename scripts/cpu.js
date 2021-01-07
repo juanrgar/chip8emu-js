@@ -114,6 +114,7 @@ class Cpu {
     reset() {
         this.set_pc(0x200);
         this.pc_updated = false;
+        this.wait_for_irq = false;
         this.halt();
     }
 
