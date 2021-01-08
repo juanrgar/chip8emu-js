@@ -10,9 +10,9 @@
   </head>
 
   <body>
-    <div id="header">
+    <header>
       <h1>CHIP-8 Emulator</h1>
-    </div>
+    </header>
     <div id="content">
       <div id="keyboard">
         <h2>Keyboard Mapping</h2>
@@ -30,30 +30,33 @@
         <h2>ROM Info</h2>
         <p></p>
       </div>
-      <div id="console">
+      <div id="controls">
         <select id="rom-selector">
           <option value="">Load ROM...</option>
         </select>
         <button id="stop-button">Stop</button>
-        <canvas id="screen"></canvas>
       </div>
-      <h2 id="settings">Settings</h2>
-      <div id="settings-pane">
-        <div id="quirks">
-          <h3>Quirks</h3>
-          <div>
-            <input type="checkbox" id="load-store-quirk">
-            <label for="load-store-quirk">LD [I], Vx and LD Vx, [I] don't increment value of I register.</label>
-          </div>
-          <div>
-            <input type="checkbox" id="shift-quirk">
-            <label for="shift-quirk">Shift instructions operate on VX.</label>
+      <canvas id="screen"></canvas>
+      <textarea readonly id="disassembly"></textarea>
+      <div id="settings">
+        <h2>Settings</h2>
+        <div id="settings-pane">
+          <div id="quirks">
+            <h3>Quirks</h3>
+            <div>
+              <input type="checkbox" id="load-store-quirk">
+              <label for="load-store-quirk">LD [I], Vx and LD Vx, [I] don't increment value of I register.</label>
+            </div>
+            <div>
+              <input type="checkbox" id="shift-quirk">
+              <label for="shift-quirk">Shift instructions operate on VX.</label>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <footer>
-      Copyright (C) 2020 Juan R. García Blanco <juanrgar@gmail.com>
+      Copyright (C) 2020 Juan R. García Blanco (juanrgar AT gmail DOT com)
     </footer>
   </body>
 </html>

@@ -2,35 +2,50 @@ body {
     background-color: #151515;
     color: #eaeaea;
     font-family: monospace;
-    margin: 0;
 }
 
-#header {
+header {
     color: #b5e853;
-    text-align: center;
 }
 
+/*
 #content {
     max-width: 640px;
     margin: 10px auto;
 }
+*/
 
-#content h2,h3{
+#content {
+}
+
+#content h2,h3 {
     color: #b5e853;
 }
 
-#rom-selector {
+#keyboard {
+}
+
+#rom-info {
+}
+
+#controls {
     margin: 10px auto;
-    font-family: monospace;
 }
 
 #screen {
     background-color: white;
-    border: 5px solid #b5e853;
+}
+
+#disassembly {
+}
+
+#settings {
+}
+
+#rom-selector {
+    font-family: monospace;
 }
 
 footer {
-    text-align: center;
-    margin: 30px auto;
     color: #666;
 }
