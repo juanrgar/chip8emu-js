@@ -30,22 +30,8 @@ let tic, roms;
 $(function() {
     loadSprites();
     setupRomSelector();
-    let stopButton = $("#stop-button");
-    stopButton.prop("disabled", true).click(function () {
-        if (stopButton.text() === "Stop") {
-            cpu.halt();
-            stopButton.text("Resume");
-        } else if (stopButton.text() === "Resume") {
-            cpu.resume();
-            stopButton.text("Stop");
-        }
-        stopButton.blur();
-    });
-    $("#settings").click(function() {
-        $("#settings-pane").toggle();
-    });
-    $("#load-store-quirk").prop("checked", false);
-    $("#shift-quirk").prop("checked", false);
+    setupStopResumeButton();
+    setupSettingsPane();
     $("#rom-info p").html("No ROM loaded.");
 });
 
@@ -105,7 +91,7 @@ function loadSprites() {
 function setupRomSelector() {
     $.get('roms/roms.json', function(romsList) {
         roms = romsList;
-        let romSelector = document.querySelector('#rom-selector');
+        let romSelector = $("#rom-selector").get(0);
         $.each(romsList, function(i, rom) {
             let o = new Option(rom.title, rom.file);
             o.title = rom.description;
@@ -135,5 +121,34 @@ function onRomSelected() {
         $("#rom-info p").html(rom.description);
         tic = Date.now();
         window.requestAnimationFrame(step);
+    });
+}
+
+function setupStopResumeButton() {
+    let stopButton = $("#stop-button");
+    stopButton.prop("disabled", true).click(onStopResumeClick);
+}
+
+function onStopResumeClick () {
+    let stopButton = $("#stop-button");
+    if (stopButton.text() === "Stop") {
+        cpu.halt();
+        stopButton.text("Resume");
+    } else if (stopButton.text() === "Resume") {
+        cpu.resume();
+        stopButton.text("Stop");
+    }
+    stopButton.blur();
+}
+
+function setupSettingsPane () {
+    $("#settings").click(function() {
+        $("#settings-pane").toggle();
+    });
+    $("#load-store-quirk").prop("checked", false).click(function () {
+        cpu.set_quirk_ld_i_inc(false);
+    });
+    $("#shift-quirk").prop("checked", false).click(function () {
+        cpu.set_quirk_shift_vx(true);
     });
 }

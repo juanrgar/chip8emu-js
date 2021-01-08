@@ -35,6 +35,9 @@ class Cpu {
         this.wait_for_irq = false;
         this.pc_updated = false;
 
+        this.quirk_ld_i_inc = true;
+        this.quirk_shift_vx = false;
+
         this.decoder_level1 = [
             this.decode_level1_0,
             this.inst_JP,
@@ -158,6 +161,14 @@ class Cpu {
 
     resume() {
         this.halted = false;
+    }
+
+    set_quirk_ld_i_inc(v) {
+        this.quirk_ld_i_inc = v;
+    }
+
+    set_quirk_shift_vx(v) {
+        this.quirk_shift_vx = v;
     }
 
     decode_level0(inst) {
@@ -317,14 +328,20 @@ class Cpu {
     inst_LD_regs_st(inst) {
         let x = (inst >> 8) & 0xF;
         for (let i = 0; i <= x; i++) {
-            this.memory[this.i++] = this.v[i];
+            this.memory[this.i + i] = this.v[i];
+        }
+        if (this.quirk_ld_i_inc) {
+            this.i += x + 1;
         }
     }
 
     inst_LD_regs_ld(inst) {
         let x = (inst >> 8) & 0xF;
         for (let i = 0; i <= x; i++) {
-            this.v[i] = this.memory[this.i++];
+            this.v[i] = this.memory[this.i + i];
+        }
+        if (this.quirk_ld_i_inc) {
+            this.i += x + 1;
         }
     }
 
@@ -384,23 +401,29 @@ class Cpu {
 
     inst_SHR(inst) {
         let x = (inst >> 8) & 0xF;
-        let y = (inst >> 4) & 0xF;
-//        this.v[0xF] = this.v[x] & 0x01;
-//        this.v[x] >>= 1;
-        let vy = this.v[y];
-        this.v[0xF] = vy & 1;
-        this.v[x] = vy >> 1;
+        let operand;
+        if (this.quirk_shift_vx) {
+            operand = this.v[x];
+        } else {
+            let y = (inst >> 4) & 0xF;
+            operand = this.v[y];
+        }
+        this.v[0xF] = operand & 1;
+        this.v[x] = operand >> 1;
     }
 
     inst_SHL(inst) {
         let x = (inst >> 8) & 0xF;
-        let y = (inst >> 4) & 0xF;
-//        this.v[0xF] = this.v[x] & 0x80;
-//        this.v[x] <<= 1;
-//        this.v[x] &= 0xFF;
-        let vy = this.v[y];
-        this.v[0xF] = (vy >> 7) & 1;
-        this.v[x] = this.v[y] << 1;
+        let operand;
+        if (this.quirk_shift_vx) {
+            operand = this.v[x];
+        } else {
+            let y = (inst >> 4) & 0xF;
+            operand = this.v[y];
+        }
+        this.v[0xF] = (operand >> 7) & 1;
+        this.v[x] = operand << 1;
+        this.v[x] &= 0xFF;
     }
 
     inst_RND(inst) {
