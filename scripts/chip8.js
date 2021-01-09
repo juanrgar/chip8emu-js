@@ -19,11 +19,13 @@
 
 import Screen from './screen.js';
 import Keyboard from './keyboard.js';
+import Speaker from './speaker.js';
 import Cpu from './cpu.js';
 
 const screen = new Screen(10);
 const keyboard = new Keyboard();
-const cpu = new Cpu(screen, keyboard);
+const speaker = new Speaker();
+const cpu = new Cpu(screen, keyboard, speaker);
 
 let tic, roms;
 

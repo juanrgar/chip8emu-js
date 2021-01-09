@@ -18,9 +18,10 @@
  */
 
 class Cpu {
-    constructor(screen, keyboard) {
+    constructor(screen, keyboard, speaker) {
         this.screen = screen;
         this.keyboard = keyboard;
+        this.speaker = speaker;
 
         this.memory = new Uint8Array(4096);
         this.v = new Uint8Array(16);
@@ -155,6 +156,7 @@ class Cpu {
             }
         }
         this.updateTimers();
+        this.playSound();
     }
 
     halt() {
@@ -490,6 +492,14 @@ class Cpu {
         }
         if (this.soundTimer > 0) {
             this.soundTimer--;
+        }
+    }
+
+    playSound() {
+        if (this.soundTimer > 0) {
+            this.speaker.play(400);
+        } else {
+            this.speaker.stop();
         }
     }
 }
