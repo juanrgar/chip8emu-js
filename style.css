@@ -23,6 +23,10 @@ select {
     font-family: monospace;
 }
 
+input {
+    font-family: monospace;
+}
+
 button {
     font-family: monospace;
 }
