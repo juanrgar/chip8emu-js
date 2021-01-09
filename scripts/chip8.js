@@ -32,7 +32,7 @@ $(function() {
     setupRomSelector();
     setupStopResumeButton();
     setupSettingsPane();
-    $("#rom-info p").html("No ROM loaded.");
+    $("#rom-desc p").html("No ROM loaded.");
 });
 
 function step() {
@@ -108,7 +108,7 @@ function onRomSelected() {
         $("#stop-button").text("Stop").prop("disabled", true).blur();
         screen.clear();
         cpu.reset();
-        $("#rom-info p").html("No ROM loaded.");
+        $("#rom-desc p").html("No ROM loaded.");
         return;
     }
     let rom = roms[romSelector.selectedIndex - 1];
@@ -118,7 +118,7 @@ function onRomSelected() {
         cpu.resume();
         romSelector.blur();
         $("#stop-button").prop("disabled", false);
-        $("#rom-info p").html(rom.description);
+        $("#rom-desc p").html(rom.description);
         tic = Date.now();
         window.requestAnimationFrame(step);
     });
@@ -126,29 +126,27 @@ function onRomSelected() {
 
 function setupStopResumeButton() {
     let stopButton = $("#stop-button");
-    stopButton.prop("disabled", true).click(onStopResumeClick);
-}
-
-function onStopResumeClick () {
-    let stopButton = $("#stop-button");
-    if (stopButton.text() === "Stop") {
-        cpu.halt();
-        stopButton.text("Resume");
-    } else if (stopButton.text() === "Resume") {
-        cpu.resume();
-        stopButton.text("Stop");
-    }
-    stopButton.blur();
+    stopButton.prop("disabled", true).click(function () {
+        let stopButton = $("#stop-button");
+        if (stopButton.text() === "Stop") {
+            cpu.halt();
+            stopButton.text("Resume");
+        } else if (stopButton.text() === "Resume") {
+            cpu.resume();
+            stopButton.text("Stop");
+        }
+        stopButton.blur();
+    });
 }
 
 function setupSettingsPane () {
-    $("#settings").click(function() {
-        $("#settings-pane").toggle();
-    });
     $("#load-store-quirk").prop("checked", false).click(function () {
         cpu.set_quirk_ld_i_inc(false);
     });
     $("#shift-quirk").prop("checked", false).click(function () {
         cpu.set_quirk_shift_vx(true);
+    });
+    $("#nb-inst-cycle").val(cpu.get_nb_inst_cycle()).change(function () {
+        cpu.set_nb_inst_cycle(this.value);
     });
 }

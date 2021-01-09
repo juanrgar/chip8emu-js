@@ -38,6 +38,8 @@ class Cpu {
         this.quirk_ld_i_inc = true;
         this.quirk_shift_vx = false;
 
+        this.nb_inst_cycle = 10;
+
         this.decoder_level1 = [
             this.decode_level1_0,
             this.inst_JP,
@@ -144,7 +146,7 @@ class Cpu {
         if (this.halted || this.wait_for_irq) {
             return;
         }
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < this.nb_inst_cycle; i++) {
             let inst = (this.memory[this.pc] << 8) | this.memory[this.pc + 1];
             this.pc_updated = false;
             this.decode_level0(inst);
@@ -169,6 +171,14 @@ class Cpu {
 
     set_quirk_shift_vx(v) {
         this.quirk_shift_vx = v;
+    }
+
+    get_nb_inst_cycle() {
+        return this.nb_inst_cycle;
+    }
+
+    set_nb_inst_cycle(v) {
+        this.nb_inst_cycle = v;
     }
 
     decode_level0(inst) {

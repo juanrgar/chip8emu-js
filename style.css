@@ -6,26 +6,40 @@ body {
 
 header {
     color: #b5e853;
+    text-align: center;
 }
 
-/*
+footer {
+    color: #666;
+    text-align: center;
+}
+
+a {
+    color: #63c0f5;
+    text-shadow: 0 0 5px rgba(104,182,255,0.5);
+}
+
+select {
+    font-family: monospace;
+}
+
+button {
+    font-family: monospace;
+}
+
 #content {
     max-width: 640px;
     margin: 10px auto;
-}
-*/
-
-#content {
 }
 
 #content h2,h3 {
     color: #b5e853;
 }
 
-#keyboard {
+#about {
 }
 
-#rom-info {
+#rom-desc {
 }
 
 #controls {
@@ -37,12 +51,4 @@ header {
 }
 
 #settings {
-}
-
-#rom-selector {
-    font-family: monospace;
-}
-
-footer {
-    color: #666;
 }
